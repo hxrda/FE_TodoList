@@ -2,7 +2,6 @@ import React from "react";
 import TodoTable from "./TodoTable";
 
 function TodoList() {
-	//const [description, setDescription] = React.useState("");
 	const [todo, setTodo] = React.useState({ date: "", description: "" });
 
 	const [todos, setTodos] = React.useState([]);
@@ -15,7 +14,7 @@ function TodoList() {
 
 	const handleDelete = (row) => {
 		//console.log("Delete: " + row);
-		setTodos(todos.filter((todo, index) => index != row)); //index:0,1,2,4...., row:. Compares row to indexes.
+		setTodos(todos.filter((todo, index) => index != row));
 	};
 	return (
 		<>
@@ -43,12 +42,3 @@ function TodoList() {
 }
 
 export default TodoList;
-
-//1.Or before function: "export default function TodoList() {}...."
-//2.If you don't want to write React.useState but only useState (only imports the hook funct from react)
-//    -> import {useState } from 'react'
-//    -> import {useState, useEffect } from 'react'
-//3. <></>  = Shorthand for React.fragment
-//4. "event" or "e"  -> e.target.value
-//5. latest at the begining: "[description, ...todos]"
-//6. Columns of table: <td>
