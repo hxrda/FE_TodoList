@@ -4,6 +4,15 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+//import { format } from "date-fns";
+
 function TodoList() {
 	//States:
 	const [todo, setTodo] = React.useState({
@@ -58,43 +67,69 @@ function TodoList() {
 		}
 	};
 
+	const handleDateChange = (date) => {
+		if (date) {
+			const dateString = date.toISOString();
+			const formattedDate = dateString.slice(0, 10);
+			setTodo({ ...todo, date: formattedDate });
+		} else {
+			setTodo({ ...todo, date: "" }); // Case where no date is selected
+		}
+	};
+
 	//Return for rendering:
 	return (
 		<>
-			<h3>My Todos</h3>
+			<Stack
+				mt={2}
+				direction="row"
+				spacing={2}
+				alignItems="center"
+				justifyContent="center"
+			>
+				<TextField
+					label="Description"
+					value={todo.description}
+					onChange={(event) =>
+						setTodo({ ...todo, description: event.target.value })
+					}
+				/>
 
-			<input
-				placeholder="Description"
-				value={todo.description}
-				onChange={(event) =>
-					setTodo({ ...todo, description: event.target.value })
-				}
-			/>
-			<input
-				type="date"
-				placeholder="Date"
-				value={todo.date}
-				onChange={(event) => setTodo({ ...todo, date: event.target.value })}
-			/>
-			<input
-				placeholder="Priority"
-				value={todo.priority}
-				onChange={(event) => setTodo({ ...todo, priority: event.target.value })}
-			/>
+				<LocalizationProvider dateAdapter={AdapterDayjs}>
+					<DatePicker label="Date" onChange={handleDateChange} />
+				</LocalizationProvider>
 
-			<button onClick={handleClick}>Add Todo</button>
-			<button onClick={handleDelete}>Delete</button>
+				<TextField
+					label="Priority"
+					value={todo.priority}
+					onChange={(event) =>
+						setTodo({ ...todo, priority: event.target.value })
+					}
+				/>
 
-			<div className="ag-theme-material" style={{ width: "100%", height: 500 }}>
-				<AgGridReact
-					ref={gridRef}
-					onGridReady={(params) => (gridRef.current = params.api)}
-					rowSelection="single"
-					rowData={todos}
-					columnDefs={columnDefs}
-					animateRows={true}
-				></AgGridReact>
-			</div>
+				<Button variant="contained" onClick={handleClick}>
+					Add Todo
+				</Button>
+				<Button variant="contained" color="error" onClick={handleDelete}>
+					Delete
+				</Button>
+			</Stack>
+
+			<Stack alignItems="center" justifyContent="center">
+				<div
+					className="ag-theme-material"
+					style={{ width: "50%", height: 500 }}
+				>
+					<AgGridReact
+						ref={gridRef}
+						onGridReady={(params) => (gridRef.current = params.api)}
+						rowSelection="single"
+						rowData={todos}
+						columnDefs={columnDefs}
+						animateRows={true}
+					></AgGridReact>
+				</div>
+			</Stack>
 		</>
 	);
 }
